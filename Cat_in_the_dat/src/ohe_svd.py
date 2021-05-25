@@ -8,7 +8,7 @@ from sklearn import preprocessing
 
 def run(fold):
 
-    df = pd.pd.read_csv("../input/cat_train_folds.csv")
+    df = pd.read_csv("../input/cat_train_folds.csv")
 
     ## All columns are features except id and Target
     features = [x for x in df.columns if x not in ["id","target","kfold"]]
@@ -35,6 +35,10 @@ def run(fold):
     # Reducing the data to 120 components
     svd = decomposition.TruncatedSVD(n_components=120)
 
+    # fit svd on full sparse training data
+    full_sparse = sparse.vstack((x_train, x_valid))
+    svd.fit(full_sparse)
+    
     # Fit SVD on Full SParse Train and vali data
     x_train = svd.transform(x_train)
     x_valid = svd.transform(x_valid)
@@ -43,7 +47,8 @@ def run(fold):
     model = ensemble.RandomForestClassifier(n_jobs=-1)
     model.fit(x_train, df_train['target'].values)
 
-    valid_preds = model.predict_proba(x_valid)
+    # predict on validation data# we need the probability values as we are calculating AUC# we will use the probability of 1s
+    valid_preds = model.predict_proba(x_valid)[:,1]
 
     auc = metrics.roc_auc_score(df_valid['target'].values, valid_preds)
 
