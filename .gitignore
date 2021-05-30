@@ -4,3 +4,5 @@ Cat_in_the_dat/input
 Cat_in_the_dat/models
 ../input
 ../models
+US_Adult_Census/input/adult_folds.csv
+US_Adult_Census/input/adult.csv
