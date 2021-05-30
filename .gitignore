@@ -2,3 +2,5 @@ MNIST/input
 MNIST/models
 Cat_in_the_dat/input
 Cat_in_the_dat/models
+../input
+../models
