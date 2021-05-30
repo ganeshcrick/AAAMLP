@@ -1,6 +1,7 @@
 import pandas as pd
+import xgboost as xgb
 
-from sklearn import linear_model
+from sklearn import ensemble
 from sklearn import metrics
 from sklearn import preprocessing
 
@@ -12,7 +13,7 @@ def run(fold):
     num_cols=['fnlwgt','age','capital.gain','capital.loss','hours.per.week']
 
     # drop numerical columns
-    df = df.drop(num_cols,axis=1)
+    # df = df.drop(num_cols,axis=1)
 
     # map targets to 0s and 1s
     target_mapping = {
@@ -27,25 +28,27 @@ def run(fold):
     # fill all NaN values with NONE # note that I am converting all columns to "strings" # it doesn’t matter because all are categories
 
     for col in features:
-        df[col] = df[col].astype(str).fillna("NONE")
+        if col not in num_cols:# Do not encode numerical columns
+            df[col] = df[col].astype(str).fillna("NONE")
+
+    # Label encode Features
+    for col in features:
+        if col not in num_cols:
+            lbl = preprocessing.LabelEncoder()
+            lbl.fit(df[col])
+            df[col] = lbl.transform(df[col])
 
     df_train = df[df['kfold']!=fold].reset_index(drop=True)
     df_valid = df[df['kfold']==fold].reset_index(drop=True)
 
-    # Initialize one hot encode
-    ohe = preprocessing.OneHotEncoder()
-
-    # fit ohe on train plus validation features
-    full_data = df[features]
-    ohe.fit(full_data)
-
+    
     # Transform Train and Valid feature data
-    x_train = ohe.transform(df_train[features])
-    x_valid = ohe.transform(df_valid[features])
+    x_train = df_train[features]
+    x_valid = df_valid[features]
 
-    # Initialize Logistic regression Model
+    # Initialize Random Forest Model
 
-    model = linear_model.LogisticRegression()
+    model = xgb.XGBClassifier(n_jobs=-1)
     model.fit(x_train,df_train['income'].values)
 
 # Predict Probablity values to calculate AUC
