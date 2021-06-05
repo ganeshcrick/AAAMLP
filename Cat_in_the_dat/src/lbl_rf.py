@@ -9,7 +9,6 @@ def run(fold):
     df = pd.read_csv("../input/cat_train_folds.csv")
 
     ## All columns are features except id and Target
-
     features = [x for x in df.columns if x not in ["id","target","kfold"]]
 
     # fill all NaN values with NONE # note that I am converting all columns to "strings" # it doesn’t matter because all are categories
