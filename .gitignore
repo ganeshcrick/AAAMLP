@@ -1,8 +1,7 @@
-MNIST/input
-MNIST/models
-Cat_in_the_dat/input
-Cat_in_the_dat/models
-../input
-../models
-US_Adult_Census/input/adult_folds.csv
-US_Adult_Census/input/adult.csv
+Arranging_ML_Projects/MNIST/input
+Arranging_ML_Projects/MNIST/models
+Handling_Categorical_Variables/Cat_in_the_dat/input
+Handling_Categorical_Variables/Cat_in_the_dat/models
+Handling_Categorical_Variables/US_Adult_Census/input
+Handling_Categorical_Variables/US_Adult_Census/input
+Hyperparameter_Optimization/input
